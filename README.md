@@ -21,8 +21,8 @@ Built on top of [GroundingDINO](https://github.com/IDEA-Research/GroundingDINO),
 **Requirements:** Python 3.10, CUDA-capable GPU (CUDA 12.9 or newer)
 
 ```bash
-git clone https://github.com/azzy13/selectivetracking.git
-cd selectivetracking
+git clone https://github.com/azzy13/dains_perception.git
+cd dains_perception
 
 pixi install
 ```

@@ -13510,7 +13510,7 @@ packages:
   size: 2384
   timestamp: 1778812525913
 - pypi: ./
-  name: selectivetracking
+  name: dains-perception
   requires_dist:
   - torch<=2.1.2 ; extra == 'docker'
   - torchvision ; extra == 'docker'
