@@ -1,5 +1,5 @@
 """
-Assembles msgs/PerceptionArray from GroundingDINO tracks.
+Assembles perception_msgs/PerceptionArray from GroundingDINO tracks.
 
 Kept separate from the ROS2 node so the field mapping is testable without
 a running ROS graph: everything here is plain Python over track objects,
@@ -88,7 +88,7 @@ def build_perception(
     match_prob: float,
     set_field,
 ):
-    """Fill one msgs/Perception from a track.
+    """Fill one perception_msgs/Perception from a track.
 
     location is metres NED, or None when projection failed -- in which
     case the message carries zeros, which is what an unset float32[3] is

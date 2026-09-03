@@ -25,8 +25,9 @@ cd ..
 ./docker/build_ros2.sh
 ```
 
-Self-contained — the `msgs` message definitions the node publishes live at
-`ros2_package/msgs` and are staged into the Docker context by the build
+Self-contained — the `perception_msgs` message definitions the node publishes
+live at `ros2_package/perception_msgs` and are staged into the Docker context
+by the build
 script, so no external checkout is needed.
 
 ### 3. Run GroundingDINO Node
@@ -133,7 +134,7 @@ GroundingDINO/
 │   └── tracking.mp4                  ← Video output
 └── ros2_package/
     ├── groundingdino_ros/
-    └── msgs/                         ← Message definitions
+    └── perception_msgs/              ← Message definitions
 ```
 
 

@@ -1,4 +1,4 @@
-# msgs
+# perception_msgs
 
 Interface package for `groundingdino_ros`. Defines the detection and
 perception message types the node publishes.
@@ -12,9 +12,9 @@ perception message types the node publishes.
 ## Wire compatibility
 
 ROS 2 matches a publisher to a subscriber by the fully-qualified type name
-**and** the message definition. These types are `msgs/msg/...`, so a
-subscriber expecting any other package name will not connect — silently, with
-no error and no data. Changing a field here has the same effect.
+**and** the message definition. These types are `perception_msgs/msg/...`, so
+a subscriber expecting any other package name will not connect — silently,
+with no error and no data. Changing a field here has the same effect.
 
 Both sides of a topic must therefore be built from this package. If you need
 to interoperate with a consumer built against a differently-named package,

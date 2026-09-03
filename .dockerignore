@@ -40,7 +40,7 @@ eval/results/
 track_results.txt
 *.csv
 
-# But keep requirements.txt and the staged msgs
+# But keep requirements.txt and the staged perception_msgs
 !requirements.txt
 !_msgs_build/
 

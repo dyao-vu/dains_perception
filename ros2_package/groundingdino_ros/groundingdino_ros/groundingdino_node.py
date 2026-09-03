@@ -26,7 +26,7 @@ sys.path.insert(0, str(GROUNDINGDINO_ROOT))
 
 from worker_simple import Worker
 from scene_graph import SceneGraphBuilder, SceneGraphMissionFilter
-from msgs.msg import Detection, DetectionArray, Perception, PerceptionArray
+from perception_msgs.msg import Detection, DetectionArray, Perception, PerceptionArray
 
 # Import mission parser (same directory when installed)
 try:
@@ -52,9 +52,9 @@ PERCEPTION_QOS = QoSProfile(
 
 
 def _set_if_present(msg, field: str, value) -> bool:
-    """Assign msg.field only if this msgs build actually defines it.
+    """Assign msg.field only if this perception_msgs build actually defines it.
 
-    Some builds of msgs carry optional extra fields (frame_number,
+    Some builds of perception_msgs carry optional extra fields (frame_number,
     occlusion, pose) that this repo's definitions do not.  rosidl message
     classes use __slots__, so assigning a field the built package does not
     define raises AttributeError and kills the frame.  This keeps one node

@@ -9,8 +9,8 @@ This subscribes and writes two files:
   <out>.csv    one row per perception, flat, for a quick eyeball or a plot
 
 Field access goes through getattr so the same recorder works whether or not
-the built msgs package defines the optional frame_number, occlusion and pose
-fields.
+the built perception_msgs package defines the optional frame_number, occlusion
+and pose fields.
 
 Usage:
     python3 perception_recorder.py --output /output/perceptions
@@ -25,7 +25,7 @@ from rclpy.node import Node
 from rclpy.qos import (QoSDurabilityPolicy, QoSHistoryPolicy, QoSProfile,
                        QoSReliabilityPolicy)
 
-from msgs.msg import PerceptionArray
+from perception_msgs.msg import PerceptionArray
 
 DEFAULT_TOPIC = "/vanderbilt/fake_perception/data"
 

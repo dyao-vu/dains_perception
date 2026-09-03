@@ -75,8 +75,8 @@ source /app/ros2_ws/install/setup.bash
 export PYTHONPATH=/app/GroundingDINO:/app/GroundingDINO/eval:\$PYTHONPATH
 cd /app/GroundingDINO
 
-echo '--- msgs definitions built into this image ---'
-ros2 interface show msgs/msg/Perception
+echo '--- perception_msgs definitions built into this image ---'
+ros2 interface show perception_msgs/msg/Perception
 echo ''
 
 echo '--- starting groundingdino node ---'

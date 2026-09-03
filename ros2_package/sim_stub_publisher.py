@@ -32,7 +32,7 @@ from builtin_interfaces.msg import Time
 from geometry_msgs.msg import PoseStamped
 from sensor_msgs.msg import CameraInfo, Image
 from cv_bridge import CvBridge
-from msgs.msg import PerceptionArray
+from perception_msgs.msg import PerceptionArray
 
 PREFIX = "/viaduct/Sim/SceneDroneSensors/robots/Drone1"
 SCENE_TOPIC = f"{PREFIX}/sensors/front_center1/scene_camera/image"
