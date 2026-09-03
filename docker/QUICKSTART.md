@@ -25,10 +25,10 @@ cd ..
 ./docker/build_ros2.sh
 ```
 
-Self-contained — the `perception_msgs` message definitions the node publishes
-live at `ros2_package/perception_msgs` and are staged into the Docker context
-by the build
-script, so no external checkout is needed.
+Self-contained — the `perception_msgs` message definitions are located at
+`ros2_package/perception_msgs`, so no `perception_msgs` checkout is
+needed. See "Message version skew" in `DEMO.md` to build against a different
+revision.
 
 ### 3. Run GroundingDINO Node
 
@@ -86,20 +86,24 @@ docker run -d \
   --network host \
   --ipc=host \
   -e ROS_DOMAIN_ID=0 \
-  -v /isis/home/hasana3/vlmtest/GroundingDINO:/app/groundingdino:ro \
+  -v ${PWD}/videos:/app/GroundingDINO/videos:ro \
   groundingdino_ros:latest \
-  bash -c "cd /app/groundingdino/ros2_package && \
-           python3 test_publisher.py --video /app/groundingdino/videos/carla1.mp4 --fps 30"
+  bash -c "cd /app/GroundingDINO/ros2_package && \
+           python3 test_publisher.py --video /app/GroundingDINO/videos/carla1.mp4 --fps 30"
 ```
 
 ### 7. Verify It's Working
 
 ```bash
+# Opens an interactive login shell inside the already-running test_publisher container
+docker exec -it test_publisher bash -l
+
 # Check topics are publishing
 ros2 topic list | grep groundingdino
 
 # See detections
-ros2 topic echo /groundingdino/tracks --once
+ros2 topic echo /perception/detections --once
+ros2 topic echo /perception/perceptions --once
 
 # Check FPS
 ros2 topic hz /groundingdino/visualization
@@ -134,7 +138,7 @@ GroundingDINO/
 │   └── tracking.mp4                  ← Video output
 └── ros2_package/
     ├── groundingdino_ros/
-    └── perception_msgs/              ← Message definitions
+    └── perception_msgs/                 ← msg definitions
 ```
 
 
