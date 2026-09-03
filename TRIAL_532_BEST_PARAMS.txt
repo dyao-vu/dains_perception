@@ -1,0 +1,88 @@
+  ================================================================================
+  TRIAL 532 PARAMETERS (Close to Best Trial 518)
+  ================================================================================
+
+  Performance Metrics:
+  Combined Score: 0.213974 (60% MOTA + 40% IDF1)
+  MOTA: 0.0015
+  IDF1: 0.4649
+  Optuna Value: 0.786026
+
+  Note: Trial 518 (best) has combined score of 0.2189, only 0.005 better
+
+  ================================================================================
+  HYPERPARAMETERS TO USE:
+  ================================================================================
+
+  Detection Parameters:
+  --box_threshold       0.4549706853844193
+  --text_threshold      0.36310447842781074
+
+  Tracking Parameters:
+  --track_thresh        0.15937989639421643
+  --match_thresh        0.8798305144582814
+  --track_buffer        110
+
+  CLIP Fusion Parameters:
+  --lambda_weight       0.5681541002030135
+  --use_clip_in_high    False
+  --use_clip_in_low     False
+
+  Text-Gate Matching:
+  --text_gate_mode      penalty
+  --text_gate_weight    0.735809202112974
+
+  Referring Filter:
+  --referring_mode      threshold
+  --referring_thresh    0.26267060145602306
+
+  Scale-Aware Detection:
+  --small_box_area_thresh  4000
+
+  Spatial/Color Filters:
+  --use_color_filter    True   (default, omit flag)
+  --use_spatial_filter  True   (default, omit flag)
+
+  ================================================================================
+  COMMAND LINE USAGE:
+  ================================================================================
+
+  python eval/eval_referkitti.py \
+  --data_root /isis/home/hasana3/vlmtest/GroundingDINO/dataset/referkitti \
+  --weights weights/swinb_light_visdrone_ft_best.pth \
+  --config groundingdino/config/GroundingDINO_SwinB_cfg.py \
+  --tracker clip \
+  --detector dino \
+  --box_threshold 0.455 \
+  --text_threshold 0.363 \
+  --track_thresh 0.159 \
+  --match_thresh 0.880 \
+  --track_buffer 110 \
+  --lambda_weight 0.568 \
+  --text_gate_mode penalty \
+  --text_gate_weight 0.736 \
+  --referring_mode threshold \
+  --referring_thresh 0.263 \
+  --small_box_area_thresh 4000 \
+  --fp16
+
+  ================================================================================
+  SHORTENED VALUES (Rounded for readability):
+  ================================================================================
+
+  box_threshold:         0.455
+  text_threshold:        0.363
+  track_thresh:          0.159
+  match_thresh:          0.880
+  track_buffer:          110
+  lambda_weight:         0.568
+  use_clip_in_high:      False
+  use_clip_in_low:       False
+  text_gate_mode:        penalty
+  text_gate_weight:      0.736
+  referring_thresh:      0.263
+  small_box_area_thresh: 4000
+  use_color_filter:      True
+  use_spatial_filter:    True
+
+  ================================================================================

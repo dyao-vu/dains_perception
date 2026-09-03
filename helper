@@ -1,0 +1,189 @@
+# Quick Commands
+# vanilla dino
+CUDA_VISIBLE_DEVICES=0 python demo/inference_on_a_image.py \
+-c groundingdino/config/GroundingDINO_SwinT_OGC.py \
+-p weights/groundingdino_swint_ogc.pth \
+-i /isis/home/hasana3/vlmtest/GroundingDINO/new_image.jpg \
+-o "./output" \
+-t "car or truck"
+
+# detection with dino
+python3 demo/inference_on_video.py \
+  --video ./videos/car2.mp4 \
+  --output ./outputs/annotated_car2.mp4 --fp16
+
+# bytetrack and clip added
+python3 demo/inference_w_finetune_dino.py     --video ./videos/carla1.mp4     --output ./outputs/annotated_carla1_worker.mp4     --fp16     --match-thresh 0.8
+
+# eval on coco 2017
+python3 demo/test_ap_on_coco.py -c groundingdino/config/GroundingDINO_SwinB_cfg.py \
+-p weights/groundingdino_swinb_cogcoor.pth \
+--anno_path /isis/home/hasana3/vlmtest/GroundingDINO/dataset/coco/annotations/instances_val2017.json \
+--image_dir /isis/home/hasana3/vlmtest/GroundingDINO/dataset/coco/val2017
+
+# eval on visdrone
+python3 eval/eval_visdrone.py \
+--data_root /isis/home/hasana3/vlmtest/GroundingDINO/dataset/visdrone_mot_format \
+--split val   --box_threshold 0.4   --text_threshold 0.8   --track_thresh 0.45   --match_thresh 0.85 \
+--text_prompt "car. pedestrian." --jobs 2 --devices 0,1 --fp16 \
+--weights /isis/home/hasana3/vlmtest/GroundingDINO/weights/swinb_light_visdrone_ft_best.pth \
+--save_video --frame_rate 24
+
+python3 eval/eval_visdrone.py \
+--data_root /isis/home/hasana3/vlmtest/GroundingDINO/dataset/visdrone_mot_format \
+--split val   --box_threshold 0.4   --text_threshold 0.8   --track_thresh 0.45   --match_thresh 0.85 \
+--text_prompt "car. pedestrian." --jobs 2 --devices 0,1 --fp16 --tracker clip \
+--weights /isis/home/hasana3/vlmtest/GroundingDINO/weights/swinb_light_visdrone_ft_best.pth \
+--save_video --frame_rate 24
+
+# eval visdrone aggressive
+python3 eval/eval_visdrone.py \
+--data_root /isis/home/hasana3/vlmtest/GroundingDINO/dataset/visdrone_mot_format \
+--split val   --box_threshold 0.4   --text_threshold 0.8   --track_thresh 0.45   --match_thresh 0.85    --text_prompt "car. pedestrian." --jobs 4 --devices 0,1 --fp16 --tracker clip \
+--weights /isis/home/hasana3/vlmtest/GroundingDINO/weights/swinb_aggro_visdrone_ft.pth --frame_rate 24 
+
+python3 eval/eval_visdrone.py \
+--data_root /isis/home/hasana3/vlmtest/GroundingDINO/dataset/visdrone_mot_format \
+--split val   --box_threshold 0.4   --text_threshold 0.8   --track_thresh 0.45   --match_thresh 0.85    --text_prompt "car. pedestrian." --jobs 4 --devices 0,1 --fp16 --tracker clip \
+--weights /isis/home/hasana3/vlmtest/GroundingDINO/weights/swinb_aggro_visdrone_ft.pth --frame_rate 24 --tracker clip --use_clip_in_low \
+--use_clip_in_unconf --lambda_weight 0.25 --text_sim_thresh 0.2
+
+# eval UADETRAC
+python3 eval/eval_uadetrac.py --data_root /isis/home/hasana3/vlmtest/GroundingDINO/dataset/DETRAC --split test --text_prompt "car. van. bus." --jobs 2 --devices 0,1 --fp16  --tracker clip \
+--frame_rate 24  --box_threshold 0.4   --text_threshold 0.8   --track_thresh 0.45   --match_thresh 0.85 
+
+# eval UAVDT
+python3 eval/eval_uavdt.py --data_root /isis/home/hasana3/vlmtest/GroundingDINO/dataset/UAV \
+--jobs 2 --devices 0,1 --fp16 --split test \
+--weights /isis/home/hasana3/vlmtest/GroundingDINO/weights/swinb_light_visdrone_ft_best.pth \
+--save_video --frame_rate 30 --text_prompt "car. van. bus."  --box_threshold 0.4   --text_threshold 0.8   --track_thresh 0.45   --match_thresh 0.85 
+
+# eval referkitti (Trial 532 optimized params - combined score: 0.214)
+python3 eval/eval_referkitti.py --data_root dataset/referkitti/ --devices 0,1 --jobs 2 --fp16 --frame_rate 10 \
+--box_threshold 0.455 --text_threshold 0.363 --track_thresh 0.45 --match_thresh 0.80 --track_buffer 110 \
+--weights /isis/home/hasana3/vlmtest/GroundingDINO/weights/swinb_light_visdrone_ft_best.pth --save_video --tracker clip \
+--lambda_weight 0.568 --text_gate_mode penalty --text_gate_weight 0.736 \
+--referring_mode threshold --referring_thresh 0.263 --small_box_area_thresh 4000 --show_gt_boxes
+
+# eval on kitti
+python3 eval/eval.py --fp16
+
+# eval on MOT17
+python3 eval/eval_mot17.py     --data_root dataset/MOT17     --split train     --detector_suffix DPM     --detector dino     --tracker bytetrack     --fp16     --devices 0,1     --jobs 2
+
+# eval 2 GPUs
+python3 eval/eval_new.py --images /isis/home/hasana3/vlmtest/GroundingDINO/dataset/kitti/validation/image_02 --labels /isis/home/hasana3/vlmtest/GroundingDINO/dataset/kitti/validation/label_02 --devices 0,1 --jobs 2 --fp16 --detector florence2
+
+# docker
+#source ros worksapce
+source /opt/ros/humble/setup.bash
+#source packages
+source install/setup.bash
+#run the container
+docker run --name groundingdino_node --rm --gpus all groundingdino_ros:latest
+
+
+# fp16 magic
+✅ Frame 8733 - Inference: 0.066s
+🎬 Video saved to: ./output/CarHDfield.mp4
+===================================
+Total Frames: 8733
+Total Inference Time: 571.77s
+Average Inference Time per Frame: 0.0655s
+Effective FPS: 15.27
+Total Wall Clock Time: 835.18s
+===================================
+
+--fp16
+✅ Frame 1705 - Inference: 0.065s
+🎬 Video saved to: ./output/airsim.mp4
+===================================
+Total Frames: 1705
+Total Inference Time: 112.03s
+Average Inference Time per Frame: 0.0657s
+Effective FPS: 15.22
+Total Wall Clock Time: 156.02s
+===================================
+
+--no-fp16
+✅ Frame 1705 - Inference: 0.083s
+🎬 Video saved to: ./output/airsim.mp4
+===================================
+Total Frames: 1705
+Total Inference Time: 140.24s
+Average Inference Time per Frame: 0.0823s
+Effective FPS: 12.16
+Total Wall Clock Time: 174.79s
+===================================
+
+# results
+# swinb on coco 2017 eval
+Accumulating evaluation results...
+DONE (t=10.98s).
+IoU metric: bbox
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.569
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.742
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.626
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.401
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.611
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.726
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.414
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.705
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.774
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.622
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.815
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.918
+Final results: [0.5689566063791862, 0.7424579592071914, 0.6256690329199213, 0.40093975470857285, 0.6111063460867908, 0.7259646325014645, 0.41427950774607114, 0.7050418105018963, 0.7742221721138068, 0.6216316172058686, 0.8148647325828953, 0.9183224493376235]
+
+# swinb on kitti 
+Saved tracking results for 0020 to outputs/2025-06-30_0317/inference_results/0020.txt
+      num_frames      MOTA     MOTP      IDF1  IDs
+0015         376  0.372502  0.26394  0.543982   77
+      num_frames      MOTA      MOTP      IDF1  IDs
+0016         209  0.100594  0.320059  0.158218  209
+      num_frames      MOTA      MOTP      IDF1  IDs
+0018         325  0.597311  0.230367  0.785566   35
+      num_frames      MOTA      MOTP      IDF1  IDs
+0019        1059  0.217353  0.263309  0.262637  602
+      num_frames      MOTA     MOTP      IDF1  IDs
+0020         837  0.368051  0.25565  0.506222  266
+
+Average MOTA: 0.331
+
+# without downsampling
+Saved tracking results for 0020 to outputs/2025-06-30_0327/inference_results/0020.txt
+      num_frames      MOTA      MOTP      IDF1  IDs
+0015         376  0.341005  0.215178  0.556634   63
+      num_frames      MOTA      MOTP      IDF1  IDs
+0016         209  0.152986  0.290162  0.176544  230
+      num_frames      MOTA      MOTP      IDF1  IDs
+0018         323  0.670205  0.148644  0.815595   37
+      num_frames      MOTA      MOTP      IDF1  IDs
+0019        1059  0.217478  0.267209  0.267669  542
+      num_frames      MOTA      MOTP      IDF1  IDs
+0020         837  0.378513  0.178109  0.521797  245
+
+Average MOTA: 0.352
+
+# Optuna
+Best hyperparameters: {'box_threshold': 0.42426489040310916, 'text_threshold': 0.5004941127573872, 'track_thresh': 0.4126191182806995, 'match_thresh': 0.8737306353175419, 'track_buffer': 198}
+Best MOTA score: 0.483
+Saved all trial results to optuna_trials_log.csv.
+
+Top 10 trials by MOTA:
+Trial |    MOTA | box_threshold | text_threshold | track_thresh | match_thresh | track_buffer
+----------------------------------------------------------------------
+  186 |   0.483 |   0.424265 |   0.500494 |   0.412619 |   0.873731 |        198
+  172 |   0.482 |   0.423878 |   0.437915 |   0.370227 |   0.845533 |        207
+   89 |    0.48 |   0.371675 |   0.592083 |   0.411803 |   0.853711 |        263
+  194 |    0.48 |   0.440929 |   0.509164 |   0.414159 |   0.887235 |        192
+  106 |   0.479 |    0.42597 |   0.439489 |   0.368227 |   0.761365 |        237
+  154 |   0.477 |   0.440134 |   0.474557 |   0.368541 |   0.807325 |        204
+  176 |   0.477 |   0.439122 |   0.505436 |   0.369955 |   0.849183 |        199
+  183 |   0.477 |   0.439582 |   0.465316 |    0.37072 |     0.8249 |        200
+  103 |   0.476 |   0.407848 |   0.443106 |   0.409828 |   0.835834 |        245
+  179 |   0.476 |   0.424655 |   0.438603 |   0.372369 |   0.875655 |        208
+
+
+Best hyperparameters: {'box_threshold': 0.49846673605091385, 'text_threshold': 0.2007307769128205, 'track_thresh': 0.1855126156353192, 'match_thresh': 0.8550404644582876, 'track_buffer': 180, 'lambda_weight': 0.2679704168727593, 'text_sim_weight': 0.16938010732051406}
+Best MOTA score: 0.537657

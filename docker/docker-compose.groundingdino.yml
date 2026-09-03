@@ -1,0 +1,53 @@
+# Docker Compose service definition for GroundingDINO ROS2 node
+# Add this service to your existing docker-compose.yml in airsim/release_installer/docker/
+
+version: '3.8'
+
+services:
+  groundingdino:
+    image: groundingdino_ros:latest
+    container_name: groundingdino_${USER:-user}
+    # Run as the host user so files written into the mounted output directory
+    # are owned by you, not by root.  The image's baked-in user is 1000:1000;
+    # export HOST_UID/HOST_GID if yours differs:
+    #   HOST_UID=$(id -u) HOST_GID=$(id -g) docker-compose up groundingdino
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    networks:
+      - ros_network
+    environment:
+      - ROS_DOMAIN_ID=0
+      - ROS_SECURITY_ENABLE=false
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+    volumes:
+      # Model weights (read-only)
+      - ${PWD}/../../vlmtest/GroundingDINO/weights:/weights:ro
+
+      # Mission config (read-only)
+      - ${PWD}/../release/mission_briefing:/mission_briefing:ro
+
+      # Output directory (read-write)
+      - ${PWD}/../release/output:/output:rw
+
+      # Optional: Config overrides
+      # - ${PWD}/../release/architecture_demo/config/groundingdino_params.yaml:/app/config/params.yaml:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      - adk
+    restart: unless-stopped
+    command: >
+      ros2 launch groundingdino_ros groundingdino.launch.py
+      tracker_type:=bytetrack
+      output_visualization:=true
+
+networks:
+  ros_network:
+    external: true
+    name: ros_network_${USER:-user}

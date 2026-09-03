@@ -1,0 +1,126 @@
+# Docker ignore file - excludes large files from build context
+# Mirrors .gitignore but focuses on reducing build context size
+
+# CRITICAL: Large data directories (mounted as volumes instead)
+weights/
+videos/
+dataset/
+output/
+outputs/
+outputs_compare/
+subs/
+logs/
+vis/
+tmp/
+*tmp_*/
+debug*/
+dump/
+
+# Model weights (mounted at runtime)
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+
+# Video files
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Image files
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.tiff
+
+# Evaluation results
+eval/results/
+track_results.txt
+*.csv
+
+# But keep requirements.txt and the staged msgs
+!requirements.txt
+!_msgs_build/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+*.ipynb
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Host-local pixi environment. 15 GB, and nothing in the image uses it -- the
+# container's interpreter is the system python3, and deps come from pip.
+# Copying it in doubled the image size.
+.pixi/
+pixi.lock
+pixi.toml
+
+# Documentation (not needed in image)
+*.md
+docs/
+/site
+
+# Configs that will be mounted
+grounding/config/configs
+grounding/version.py
+
+# Test coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/

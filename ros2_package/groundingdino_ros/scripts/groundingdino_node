@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+"""Wrapper script for groundingdino_node."""
+import sys
+import os
+from pathlib import Path
+
+# Get the directory where this script is installed (don't resolve symlinks yet)
+install_dir = Path(__file__).parent
+
+# Add the install directory to path so we can import our modules
+sys.path.insert(0, str(install_dir))
+
+# Import and run main
+import groundingdino_node
+groundingdino_node.main()

@@ -1,0 +1,33 @@
+groundingdino_node:
+  ros__parameters:
+    # Model configuration
+    model_config: "/app/GroundingDINO/groundingdino/config/GroundingDINO_SwinB_cfg.py"
+    model_weights: "/app/GroundingDINO/groundingdino/weights/groundingdino_swinb_cogcoor.pth"
+    device: "cuda"
+    use_fp16: true
+
+    # Detection thresholds
+    box_threshold: 0.40
+    text_threshold: 0.80
+
+    # Tracker configuration
+    tracker_type: "bytetrack"  # Options: "bytetrack" or "clip"
+    track_thresh: 0.45
+    track_buffer: 90
+    match_thresh: 0.85
+
+    # CLIP tracker specific (only used if tracker_type="clip")
+    lambda_weight: 0.25
+    text_sim_thresh: 0.15
+
+    # Input/output
+    camera_topic: "/viaduct/Sim/SceneDroneSensors/robots/Drone1/sensors/front_center1/scene_camera/image"
+    mission_config_path: "/mission_briefing/config.json"
+    output_visualization: true
+
+    # Text prompts
+    default_classes: ["car", "pedestrian"]
+    use_mission_classes: true
+
+    # Performance
+    frame_rate: 10
