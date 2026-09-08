@@ -25,10 +25,8 @@ cd ..
 ./docker/build_ros2.sh
 ```
 
-Self-contained — the `perception_msgs` message definitions are located at
-`ros2_package/perception_msgs`, so no `perception_msgs` checkout is
-needed. See "Message version skew" in `DEMO.md` to build against a different
-revision.
+The `perception_msgs` definitions are included under
+`ros2_package/perception_msgs`, so no separate checkout is required.
 
 ### 3. Run GroundingDINO Node
 
@@ -76,7 +74,7 @@ docker run --rm --gpus all \
     --depth
 ```
 
-Output video lands in `outputs/` on your host. Change `--text-prompt` (default: `"red car."`) to detect different objects.
+Output video is written to `outputs/` on the host. Change `--text-prompt` (default: `"red car."`) to detect different objects.
 
 ### 6. Test with Sample Video (ROS2 — In Another Terminal)
 
@@ -98,14 +96,14 @@ docker run -d \
 # Opens an interactive login shell inside the already-running test_publisher container
 docker exec -it test_publisher bash -l
 
-# Check topics are publishing
+# List topics
 ros2 topic list | grep groundingdino
 
-# See detections
+# Inspect one detection message
 ros2 topic echo /perception/detections --once
 ros2 topic echo /perception/perceptions --once
 
-# Check FPS
+# Check FPS (publish rate)
 ros2 topic hz /groundingdino/visualization
 ```
 
@@ -115,7 +113,7 @@ ros2 topic hz /groundingdino/visualization
 
 ## Clean Up
 
-When you're done testing:
+Stop the containers:
 
 ```bash
 # Stop containers
